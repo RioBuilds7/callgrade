@@ -68,6 +68,11 @@ def _run(args: argparse.Namespace) -> int:
     if all(r.transcript.error for r in run.results):
         print("every call failed to complete: check the agent is running", file=sys.stderr)
         return 2
+    unjudged = [r.scenario.id for r in run.results
+                if r.scenario.judge and r.judge and r.judge.status != "scored" and not r.transcript.error]
+    if args.require_judge and unjudged:
+        print(f"no judge verdict for {unjudged}: re-record with --judge live", file=sys.stderr)
+        return 2
     if comparison:
         print(f"\n{comparison.markdown()}")
         return 1 if comparison.failed(args.min_pass_rate) else 0
@@ -135,6 +140,8 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("--max-latency-increase-ms", type=float, default=300)
     r.add_argument("--min-pass-rate", type=float, default=0.0)
     r.add_argument("--concurrency", type=int, default=4)
+    r.add_argument("--require-judge", action="store_true",
+                   help="exit 2 if a scenario with a rubric got no judge verdict (e.g. cache miss in CI)")
     r.set_defaults(fn=_run)
 
     c = sub.add_parser("compare", help="compare two results.json files")
@@ -155,7 +162,7 @@ def build_parser() -> argparse.ArgumentParser:
     m.add_argument("--json", action="store_true")
     m.set_defaults(fn=_call_metrics)
 
-    cal = sub.add_parser("calibrate", help="measure judge agreement with hand labels")
+    cal = sub.add_parser("calibrate", help="measure judge agreement with labelled examples")
     cal.add_argument("labels")
     cal.add_argument("--scenarios", default="scenarios")
     cal.add_argument("--judge", default="auto", choices=["cache", "auto", "live"])

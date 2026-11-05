@@ -18,7 +18,7 @@ CSS = """
 :root{--ok:#1a7f37;--bad:#cf222e;--warn:#9a6700;--mute:#59636e;--line:#d1d9e0;--bg:#f6f8fa}
 *{box-sizing:border-box}body{font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;margin:0;color:#1f2328;background:#fff}
 header{padding:24px 32px;border-bottom:1px solid var(--line);background:var(--bg)}
-h1{font-size:20px;margin:0 0 4px}main{padding:24px 32px;max-width:1100px}
+h1{font-size:20px;margin:0 0 4px}main{padding:24px 32px;max-width:1200px}
 .meta{color:var(--mute);font-size:13px}.tiles{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
 .tile{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 16px;min-width:130px}
 .tile b{display:block;font-size:22px}.tile span{color:var(--mute);font-size:12px}
@@ -29,7 +29,10 @@ th{font-size:12px;color:var(--mute);font-weight:600;text-transform:uppercase}
 .pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:600;color:#fff}
 .pass{background:var(--ok)}.fail{background:var(--bad)}.skip{background:var(--mute)}
 .regressed{background:var(--bad)}.fixed{background:var(--ok)}.new{background:var(--warn)}
-details{margin:6px 0 18px}summary{cursor:pointer;color:var(--mute);font-size:13px}
+details{margin:0 0 4px}summary{cursor:pointer;color:var(--mute);font-size:13px}
+tr.main td{border-bottom:none;padding-bottom:2px}td.num{white-space:nowrap}.why{font-size:13px;color:var(--mute)}
+.detail-body{display:grid;grid-template-columns:minmax(260px,1fr) 2fr;gap:24px;padding:8px 0 12px}
+@media (max-width:800px){.detail-body{grid-template-columns:1fr}}
 .turn{margin:6px 0;padding:8px 12px;border-radius:8px;max-width:760px}
 .caller{background:var(--bg)}.agent{background:#ddf4ff;margin-left:40px}
 .turn.blame{outline:2px solid var(--bad)}.who{font-size:11px;font-weight:700;color:var(--mute);text-transform:uppercase}
@@ -100,11 +103,11 @@ def _detail(r: ScenarioResult) -> str:
         ) + "</ul>"
     elif r.judge:
         judge = f"<p><b>Judge</b> {r.judge.status}: {escape(r.judge.detail)}</p>"
-    return f"<ul class='checks'>{checks}</ul>{judge}{_transcript(r)}"
+    return f"<div class='detail-body'><div><ul class='checks'>{checks}</ul>{judge}</div><div>{_transcript(r)}</div></div>"
 
 
 def render_html(run: RunResult, comparison: Comparison | None = None) -> str:
-    status_by_id = {row.scenario_id: row.status for row in comparison.rows} if comparison else {}
+    rows_by_id = {row.scenario_id: row for row in comparison.rows} if comparison else {}
     lat_values = [v for r in run.results if (v := p95_latency(r)) is not None]
     lat_max = max(lat_values, default=1) or 1
     judged = [m for r in run.results if (m := judge_mean(r)) is not None]
@@ -123,16 +126,20 @@ def render_html(run: RunResult, comparison: Comparison | None = None) -> str:
     for r in run.results:
         sid = r.scenario.id
         pill = '<span class="pill pass">pass</span>' if r.passed else '<span class="pill fail">fail</span>'
-        change = status_by_id.get(sid, "")
+        row = rows_by_id.get(sid)
+        change = row.status if row else ""
         change_pill = f' <span class="pill {change}">{change}</span>' if change in ("regressed", "fixed", "new") else ""
-        failed = "; ".join(f"{c.name}: {c.detail}" for c in r.checks if not c.passed)
+        # With a baseline, the comparison's reasons also cover judge drops and latency rises.
+        why = row.reasons if row else [f"{c.name}: {c.detail}" for c in r.checks if not c.passed]
         p95 = p95_latency(r)
         bar = (f'<span class="bar"><i style="width:{100 * p95 / lat_max:.0f}%"></i></span> {p95:.0f} ms'
                if p95 is not None else "-")
         rows.append(
-            f"<tr><td>{pill}{change_pill}</td><td><b>{escape(sid)}</b><br><span class='meta'>{escape(r.scenario.title)}"
-            f"</span><details><summary>transcript and checks</summary>{_detail(r)}</details></td>"
-            f"<td>{_judge_cell(r)}</td><td>{bar}</td><td class='meta'>{escape(failed) or '-'}</td></tr>"
+            f"<tr class='main'><td>{pill}{change_pill}</td><td><b>{escape(sid)}</b><br>"
+            f"<span class='meta'>{escape(r.scenario.title)}</span></td>"
+            f"<td class='num'>{_judge_cell(r)}</td><td class='num'>{bar}</td>"
+            f"<td class='why'>{'<br>'.join(escape(w) for w in why) or '-'}</td></tr>"
+            f"<tr><td></td><td colspan='4'><details><summary>transcript and checks</summary>{_detail(r)}</details></td></tr>"
         )
     tile_html = "".join(f"<div class='tile'><b>{v}</b><span>{label}</span></div>" for v, label in tiles)
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8">
@@ -140,7 +147,7 @@ def render_html(run: RunResult, comparison: Comparison | None = None) -> str:
 <style>{CSS}</style></head><body><header><h1>callgrade run {escape(run.run_id)}</h1>
 <div class="meta">agent {escape(run.agent)} &middot; started {escape(run.started_at)} &middot; judge {escape(run.judge_model or "off")}</div>
 <div class="tiles">{tile_html}</div></header><main>{banner}
-<table><thead><tr><th>Result</th><th>Scenario</th><th>Judge</th><th>p95 latency</th><th>Failed checks</th></tr></thead>
+<table><thead><tr><th>Result</th><th>Scenario</th><th>Judge</th><th>p95 latency</th><th>Why it failed</th></tr></thead>
 <tbody>{"".join(rows)}</tbody></table></main></body></html>
 """
 

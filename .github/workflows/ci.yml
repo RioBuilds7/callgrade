@@ -1,0 +1,60 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      live_judge:
+        description: "Also re-run judge calibration live with a local Ollama model (slow, free)"
+        type: boolean
+        default: false
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run --frozen pytest -q
+
+  quality-gate:
+    # The job a real team would run on every agent change: grade the agent against the
+    # last good run. Judge verdicts come from judge_cache/, so no API key is needed.
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - name: Good agent (v1) must pass
+        run: scripts/gate.sh v1 0
+      - name: Regressed agent (v2) must be stopped
+        run: PORT=8001 scripts/gate.sh v2 1
+      - name: Judge still agrees with the labels
+        run: uv run --frozen callgrade calibrate calibration/labels.yaml --judge cache
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: callgrade-reports
+          path: runs/
+
+  live-judge:
+    if: github.event_name == 'workflow_dispatch' && inputs.live_judge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - name: Start Ollama with a small open model
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama serve > /tmp/ollama.log 2>&1 &
+          sleep 5
+          ollama pull qwen2.5:3b
+      - name: Calibrate the judge live
+        env:
+          JUDGE_BASE_URL: http://localhost:11434/v1
+          JUDGE_MODEL: qwen2.5:3b
+        run: uv run --frozen callgrade calibrate calibration/labels.yaml --judge live --judge-cache /tmp/fresh-cache

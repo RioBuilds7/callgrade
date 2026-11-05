@@ -1,0 +1,18 @@
+{
+  "model": "qwen2.5:3b",
+  "scenario": "replay-synthetic-hours-then-book",
+  "prompt": "Call scenario: Replay of recorded call synthetic-hours-then-book\n\nRubric:\n- id \"resolved\": Did the agent answer the hours question and then book the checkup the caller asked for?\n- id \"tone\": Was the agent brief, polite and clear enough to follow by ear?\n\nTranscript:\n[0] CALLER: What are your hours?\n[1] AGENT: We're open Monday to Friday, 8 AM to 5 PM, and Saturday 9 AM to 1 PM. Can I help you book a visit?\n[2] CALLER: Yeah, I'd like a checkup on Monday.\n[3] AGENT: On Monday I have 9 AM or 2 PM. Which would you prefer?\n  [tool] check_availability({'day': 'monday'})\n[4] CALLER: 9 am.\n[5] AGENT: Great. Can I get your full name, please?\n[6] CALLER: My name is Ava Lindqvist.\n[7] AGENT: To confirm: a checkup on Monday at 9 AM for Ava Lindqvist. Is that right?\n[8] CALLER: Yes.\n[9] AGENT: You're all set, Ava. We'll see you Monday at 9 AM. Is there anything else?\n  [tool] book_appointment({'name': 'Ava Lindqvist', 'day': 'monday', 'time': '09:00', 'reason': 'checkup'})\n[10] CALLER: That's all, bye.\n[11] AGENT: Thanks for calling Maple Street Dental. Have a great day!\n\nScore every rubric id once.",
+  "raw": "{\"scores\": [{\"id\": \"resolved\", \"reason\": \"The agent confirmed the appointment details and booked the checkup on Monday at 9 AM.\", \"score\": 5}, {\"id\": \"tone\", \"reason\": \"The agent was brief, polite, and clear throughout the call.\", \"score\": 5}]}",
+  "scores": [
+    {
+      "id": "resolved",
+      "score": 5,
+      "reason": "The agent confirmed the appointment details and booked the checkup on Monday at 9 AM."
+    },
+    {
+      "id": "tone",
+      "score": 5,
+      "reason": "The agent was brief, polite, and clear throughout the call."
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "model": "qwen2.5:3b",
+  "scenario": "book-cleaning",
+  "prompt": "Call scenario: New caller books a cleaning and confirms\n\nRubric:\n- id \"task\": Did the agent book a cleaning on Tuesday morning for Dana Whitfield, as the caller asked?\n\nTranscript:\n[0] CALLER: Hi, I'd like to book a cleaning.\n[1] AGENT: What day works best for you?\n[2] CALLER: Next Tuesday works.\n[3] AGENT: On Tuesday I have 10:30 AM or 3 PM. Which would you prefer?\n  [tool] check_availability({'day': 'tuesday'})\n[4] CALLER: Morning if possible.\n[5] AGENT: Great. Can I get your full name, please?\n[6] CALLER: It's Dana Whitfield.\n[7] AGENT: You're all set, Dana. We'll see you Tuesday at 10:30 AM. Is there anything else?\n  [tool] book_appointment({'name': 'Dana Whitfield', 'day': 'tuesday', 'time': '10:30', 'reason': 'cleaning'})\n[8] CALLER: Yes, that's right.\n[9] AGENT: Is there anything else I can help with?\n[10] CALLER: No, that's all. Thanks!\n[11] AGENT: Thanks for calling Maple Street Dental. Have a great day!\n\nScore every rubric id once.",
+  "raw": "{\"scores\": [{\"id\": \"task\", \"reason\": \"The agent booked a cleaning for Dana Whitfield on Tuesday at 10:30 AM as requested.\", \"score\": 5}, {\"id\": \"task\", \"reason\": \"The agent booked a cleaning for Dana Whitfield on Tuesday at 10:30 AM as requested.\", \"score\": 5}]}",
+  "scores": [
+    {
+      "id": "task",
+      "score": 5,
+      "reason": "The agent booked a cleaning for Dana Whitfield on Tuesday at 10:30 AM as requested."
+    }
+  ]
+}

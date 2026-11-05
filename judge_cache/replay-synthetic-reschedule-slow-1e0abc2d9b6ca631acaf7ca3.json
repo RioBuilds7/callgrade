@@ -1,0 +1,18 @@
+{
+  "model": "qwen2.5:3b",
+  "scenario": "replay-synthetic-reschedule-slow",
+  "prompt": "Call scenario: Replay of recorded call synthetic-reschedule-slow\n\nRubric:\n- id \"resolved\": Did the agent move the caller's appointment to the day and time they asked for?\n- id \"tone\": Was the agent brief, polite and clear enough to follow by ear?\n\nTranscript:\n[0] CALLER: Hi, I need to reschedule my appointment.\n[1] AGENT: What day works best for you?\n[2] CALLER: Friday, if you have anything.\n[3] AGENT: On Friday I have 8:30 AM or 1 PM. Which would you prefer?\n  [tool] check_availability({'day': 'friday'})\n[4] CALLER: One PM. Actually, wait, um\n[5] AGENT: Great. Can I get your full name, please?\n[6] CALLER: Sorry. It's Sam Iverson. One PM is fine.\n[7] AGENT: You're all set, Sam. We'll see you Friday at 1 PM. Is there anything else?\n  [tool] reschedule_appointment({'name': 'Sam Iverson', 'day': 'friday', 'time': '13:00', 'reason': 'appointment'})\n[8] CALLER: Yes.\n[9] AGENT: Is there anything else I can help with?\n[10] CALLER: No, that's all, bye.\n[11] AGENT: Thanks for calling Maple Street Dental. Have a great day!\n\nScore every rubric id once.",
+  "raw": "{\"scores\": [{\"id\": \"resolved\", \"reason\": \"The appointment was rescheduled to Friday at 1 PM as requested by the caller.\", \"score\": 5}, {\"id\": \"tone\", \"reason\": \"The agent was brief, polite, and clear throughout the call.\", \"score\": 5}]}",
+  "scores": [
+    {
+      "id": "resolved",
+      "score": 5,
+      "reason": "The appointment was rescheduled to Friday at 1 PM as requested by the caller."
+    },
+    {
+      "id": "tone",
+      "score": 5,
+      "reason": "The agent was brief, polite, and clear throughout the call."
+    }
+  ]
+}

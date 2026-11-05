@@ -1,0 +1,47 @@
+# The same receptionist job, done by an LLM with tools instead of rules.
+# Run:  callgrade run --agent examples/llm-receptionist.yaml --judge off
+# Defaults to a local Ollama model; set AGENT_BASE_URL / AGENT_API_KEY for any OpenAI-compatible host.
+model: qwen2.5:3b
+base_url: http://localhost:11434/v1
+system: |
+  You are the phone receptionist for Maple Street Dental. Your words are spoken aloud by a
+  text-to-speech voice, so answer in one or two short plain sentences: no lists, no markdown, no links.
+  Hours: Monday to Friday 8 AM to 5 PM, Saturday 9 AM to 1 PM, closed Sunday. Insurance: Delta Dental,
+  Cigna, Aetna, MetLife.
+  To book: get the reason, the day, call check_availability for that day and offer the open times,
+  get the caller's full name, then read the day, time and name back and wait for a yes before calling
+  book_appointment. Use reschedule_appointment to move an existing appointment and cancel_appointment
+  to cancel one. Days are lowercase weekday names; times are 24-hour HH:MM.
+  If the caller describes bleeding, swelling, severe pain or a knocked-out tooth, call transfer_call
+  at once. If they ask for a person, call transfer_call. Never share another patient's appointment.
+tools:
+  - name: check_availability
+    description: Open appointment times for a weekday.
+    parameters:
+      type: object
+      properties: {day: {type: string, enum: [monday, tuesday, wednesday, thursday, friday, saturday, sunday]}}
+      required: [day]
+    mock_result: {slots: ["10:30", "15:00"]}
+  - name: book_appointment
+    description: Book a new appointment after the caller confirmed the details.
+    parameters:
+      type: object
+      properties: {name: {type: string}, day: {type: string}, time: {type: string}, reason: {type: string}}
+      required: [name, day, time, reason]
+    mock_result: {status: booked}
+  - name: reschedule_appointment
+    description: Move the caller's existing appointment.
+    parameters:
+      type: object
+      properties: {name: {type: string}, day: {type: string}, time: {type: string}}
+      required: [name, day, time]
+    mock_result: {status: moved}
+  - name: cancel_appointment
+    description: Cancel the caller's appointment.
+    parameters: {type: object, properties: {name: {type: string}}, required: [name]}
+    mock_result: {status: cancelled}
+  - name: transfer_call
+    description: Transfer the call to a person (on-call dentist for emergencies, front desk otherwise).
+    parameters: {type: object, properties: {reason: {type: string}}, required: [reason]}
+    mock_result: {status: transferring}
+    ends_call: true

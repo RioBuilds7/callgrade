@@ -1,0 +1,13 @@
+{
+  "model": "qwen2.5:3b",
+  "scenario": "office-hours",
+  "prompt": "Call scenario: Caller asks for opening hours\n\nRubric:\n- id \"answer\": This reply is read aloud by a text-to-speech voice. Did the agent give the opening hours in plain spoken sentences? Markdown symbols (asterisks, dashes as bullets), line-by-line lists or a web address score 1, because the voice reads them out literally.\n\nTranscript:\n[0] CALLER: What are your hours?\n[1] AGENT: Here are our hours:\n- **Monday to Friday:** 8 AM to 5 PM\n- **Saturday:** 9 AM to 1 PM\n- **Sunday:** closed\nYou can also see them at https://example.com/hours.\n[2] CALLER: Thanks, bye.\n[3] AGENT: Thanks for calling Maple Street Dental. Goodbye!\n\nScore every rubric id once.",
+  "raw": "{\"scores\": [{\"id\": \"answer\", \"reason\": \"The agent provided the hours in a list format and a link, not in plain spoken sentences.\", \"score\": 1}, {\"id\": \"answer\", \"reason\": \"The agent provided the hours in a list format and a link, not in plain spoken sentences.\", \"score\": 1}]}",
+  "scores": [
+    {
+      "id": "answer",
+      "score": 1,
+      "reason": "The agent provided the hours in a list format and a link, not in plain spoken sentences."
+    }
+  ]
+}

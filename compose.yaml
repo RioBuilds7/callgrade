@@ -1,0 +1,34 @@
+# mkdir -p runs && docker compose up --build --abort-on-container-exit --exit-code-from bench
+# Starts the good (v1) and regressed (v2) sample agents, grades both, and writes
+# the reports to ./runs on your machine.
+services:
+  agent-v1:
+    build: .
+    command: uvicorn sample_agent.app:app --host 0.0.0.0 --port 8000
+    environment: {AGENT_VARIANT: v1}
+    healthcheck: &health
+      test: ["CMD", "curl", "-sf", "http://localhost:8000/health"]
+      interval: 2s
+      retries: 15
+  agent-v2:
+    build: .
+    command: uvicorn sample_agent.app:app --host 0.0.0.0 --port 8000
+    environment: {AGENT_VARIANT: v2}
+    healthcheck: *health
+  bench:
+    build: .
+    depends_on:
+      agent-v1: {condition: service_healthy}
+      agent-v2: {condition: service_healthy}
+    user: "${UID:-1000}:${GID:-1000}"  # reports in ./runs belong to you, not root
+    volumes: ["./runs:/app/runs"]
+    command:
+      - sh
+      - -c
+      - |
+        callgrade run --agent http://agent-v1:8000 --judge cache --require-judge --baseline baseline/results.json --out runs/v1
+        v1=$$?
+        callgrade run --agent http://agent-v2:8000 --judge cache --require-judge --baseline baseline/results.json --out runs/v2
+        v2=$$?
+        echo "v1 exit $$v1 (want 0), v2 exit $$v2 (want 1)"
+        [ $$v1 -eq 0 ] && [ $$v2 -eq 1 ]

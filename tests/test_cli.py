@@ -54,3 +54,20 @@ def test_calibrate_from_cache_without_a_model(tmp_path, capsys):
 def test_checks_lists_registry(capsys):
     assert main(["checks"]) == 0
     assert "said_before_tool" in capsys.readouterr().out
+
+
+def test_require_judge_fails_on_cache_miss(live_agent, tmp_path, capsys):
+    v1 = live_agent("v1")
+    args = ["run", "--agent", v1, "--tag", "smoke", "--judge", "cache", "--judge-cache", str(tmp_path / "empty"),
+            "--out", str(tmp_path / "runs")]
+    assert main(args) == 0  # skipped verdicts are reported, not counted as failures...
+    assert main(args + ["--require-judge"]) == 2  # ...unless CI asks for them
+    assert "re-record" in capsys.readouterr().err
+
+
+def test_shipped_baseline_matches_v1_with_stored_verdicts(live_agent, tmp_path):
+    """What CI does: v1 against the committed baseline, judge from the committed cache only."""
+    v1 = live_agent("v1")
+    code = main(["run", "--agent", v1, "--judge", "cache", "--require-judge", "--baseline", "baseline/results.json",
+                 "--out", str(tmp_path)])
+    assert code == 0

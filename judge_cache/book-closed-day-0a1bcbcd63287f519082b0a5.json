@@ -1,0 +1,13 @@
+{
+  "model": "qwen2.5:3b",
+  "scenario": "book-closed-day",
+  "prompt": "Call scenario: Caller asks for a day with no openings and accepts the next one\n\nRubric:\n- id \"task\": When Wednesday had no openings, did the agent say so plainly, offer another day, and book what the caller accepted?\n\nTranscript:\n[0] CALLER: Can I come in Wednesday for a checkup?\n[1] AGENT: We don't have openings on Wednesday. The next day with openings is Thursday. Would that work?\n  [tool] check_availability({'day': 'wednesday'})\n[2] CALLER: Yes, Thursday is fine.\n[3] AGENT: On Thursday I have 9 AM or 11 AM. Which would you prefer?\n  [tool] check_availability({'day': 'thursday'})\n[4] CALLER: 11 works.\n[5] AGENT: Great. Can I get your full name, please?\n[6] CALLER: My name is Priya Raman.\n[7] AGENT: You're all set, Priya. We'll see you Thursday at 11 AM. Is there anything else?\n  [tool] book_appointment({'name': 'Priya Raman', 'day': 'thursday', 'time': '11:00', 'reason': 'checkup'})\n[8] CALLER: Yep.\n[9] AGENT: Is there anything else I can help with?\n\nScore every rubric id once.",
+  "raw": "{\"scores\": [{\"id\": \"task\", \"reason\": \"The agent confirmed Wednesday had no openings and offered Thursday as the next available day, which the caller accepted.\", \"score\": 5}, {\"id\": \"task\", \"reason\": \"The agent booked the caller's appointment for Thursday at 11 AM as requested.\", \"score\": 5}]}",
+  "scores": [
+    {
+      "id": "task",
+      "score": 5,
+      "reason": "The agent booked the caller's appointment for Thursday at 11 AM as requested."
+    }
+  ]
+}

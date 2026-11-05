@@ -1,5 +1,5 @@
 id: replay-synthetic-reschedule-slow
-title: 'Replay: Caller moves an appointment; agent is slow and talks over them once'
+title: Replay of recorded call synthetic-reschedule-slow
 tags:
 - replay
 caller:

@@ -1,0 +1,13 @@
+{
+  "model": "qwen2.5:3b",
+  "scenario": "change-at-confirmation",
+  "prompt": "Call scenario: Caller changes the day when the agent reads the booking back\n\nRubric:\n- id \"task\": Did the agent drop the Monday slot when the caller objected and book Friday at 1 PM instead?\n\nTranscript:\n[0] CALLER: I need to schedule a filling.\n[1] AGENT: What day works best for you?\n[2] CALLER: Monday, please.\n[3] AGENT: On Monday I have 9 AM or 2 PM. Which would you prefer?\n  [tool] check_availability({'day': 'monday'})\n[4] CALLER: 2 pm.\n[5] AGENT: Great. Can I get your full name, please?\n[6] CALLER: This is Marcus Bell.\n[7] AGENT: You're all set, Marcus. We'll see you Monday at 2 PM. Is there anything else?\n  [tool] book_appointment({'name': 'Marcus Bell', 'day': 'monday', 'time': '14:00', 'reason': 'filling'})\n[8] CALLER: No, actually, can we do Friday instead?\n[9] AGENT: Thanks for calling Maple Street Dental. Have a great day!\n\nScore every rubric id once.",
+  "raw": "{\"scores\": [{\"id\": \"task\", \"reason\": \"The agent did not change the appointment day from Monday to Friday when the caller objected.\", \"score\": 1}, {\"id\": \"task\", \"reason\": \"The agent did not drop the Monday slot and book Friday at 1 PM.\", \"score\": 1}, {\"id\": \"task\", \"reason\": \"The agent did not book Friday at 1 PM.\", \"score\": 1}]}",
+  "scores": [
+    {
+      "id": "task",
+      "score": 1,
+      "reason": "The agent did not book Friday at 1 PM."
+    }
+  ]
+}

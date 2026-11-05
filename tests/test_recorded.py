@@ -34,6 +34,7 @@ def test_caller_lines_merge_consecutive_caller_segments():
 def test_to_scenario_adds_voice_checks():
     s = to_scenario(dict(CALL, title="T"), source="c1.json")
     assert s.id == "replay-c1" and s.caller[1] == "I need a cleaning."
+    assert s.title == "Replay of recorded call c1"  # recording title kept away from the judge
     assert {next(iter(e)) for e in s.expect} == {"speakable", "max_words_per_turn", "no_pii", "no_repeated_turn"}
     assert s.judge and s.source == "c1.json"
 

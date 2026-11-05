@@ -106,7 +106,9 @@ def to_scenario(call: dict, source: str) -> Scenario:
     """
     return Scenario(
         id=f"replay-{call['id']}",
-        title=f"Replay: {call.get('title', call['id'])}",
+        # The recording's own title often describes how the *old* agent behaved ("agent talks over
+        # the caller"). It is kept out of the scenario title because the judge reads that title.
+        title=f"Replay of recorded call {call['id']}",
         tags=["replay"],
         caller=caller_lines(call),
         expect=[{"speakable": {}}, {"max_words_per_turn": 45}, {"no_pii": {}}, {"no_repeated_turn": {}}],

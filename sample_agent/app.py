@@ -70,8 +70,17 @@ def parse_day(text: str) -> str | None:
     return None
 
 
+NUMBER_WORDS = {
+    w: str(i) for i, w in enumerate(
+        "zero one two three four five six seven eight nine ten eleven twelve".split()
+    )
+}
+
+
 def parse_time(text: str, slots: list[str]) -> str | None:
-    t = text.lower()
+    # Speech-to-text often writes times as words ("one PM"), so turn those into digits first.
+    t = re.sub(r"\b(" + "|".join(NUMBER_WORDS) + r")\b", lambda m: NUMBER_WORDS[m.group(1)], text.lower())
+    t = re.sub(r"\b(\d+) thirty\b", r"\1:30", t)
     if "morning" in t:
         return next((s for s in slots if int(s[:2]) < 12), None)
     if "afternoon" in t:

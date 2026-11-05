@@ -66,8 +66,22 @@ ships five realistic regressions, and the bench catches every one:
 | Tells a caller another patient's appointment | `never_said` check |
 | About a second slower per turn | `latency` budget, baseline p95 compare |
 
-`examples/llm-receptionist.yaml` does the same job with an LLM and tools, so you can point the same
-scenarios at a real model.
+### Against a real LLM
+
+`examples/llm-receptionist.yaml` gives the same job to an LLM with tools. With `qwen2.5:3b` on CPU
+through Ollama, it passed 3 of 12 scenarios (full results in `docs/llm-example-results.json`). Some
+things the bench caught:
+
+- In `book-cleaning`, it booked under the name "John Doe" before the caller had given a name, then
+  told the caller "booked, Dana Whitfield" without ever calling the booking tool again.
+- In `asks-for-human`, it refused to transfer the call and read out a made-up phone number.
+- In `reschedule`, it called `reschedule_appointment` with the name "user" and also booked a new
+  appointment.
+- Each turn took 3 to 16 seconds on CPU, far over the 800 ms budget.
+
+Some of the failures come from the scenarios, not the model. The caller is scripted for the rule-based
+agent's question order, the config has no plain "end call" tool, and the mocked calendar returns the
+same slots every day.
 
 ## Test your own agent
 

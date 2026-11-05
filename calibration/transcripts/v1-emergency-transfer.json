@@ -1,0 +1,30 @@
+{
+  "scenario_id": "emergency-transfer",
+  "turns": [
+    {
+      "speaker": "caller",
+      "text": "My son knocked out a tooth and it's bleeding a lot.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "That sounds urgent. I'm connecting you to our on-call dentist right now. Please stay on the line.",
+      "tool_calls": [
+        {
+          "name": "transfer_call",
+          "args": {
+            "reason": "dental emergency"
+          }
+        }
+      ],
+      "latency_ms": 2.1,
+      "start": null,
+      "end": null
+    }
+  ],
+  "ended_by": "agent",
+  "error": null
+}

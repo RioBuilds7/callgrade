@@ -1,0 +1,104 @@
+{
+  "scenario_id": "change-at-confirmation",
+  "turns": [
+    {
+      "speaker": "caller",
+      "text": "I need to schedule a filling.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "What day works best for you?",
+      "tool_calls": [],
+      "latency_ms": 1110.0,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Monday, please.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "On Monday I have 9 AM or 2 PM. Which would you prefer?",
+      "tool_calls": [
+        {
+          "name": "check_availability",
+          "args": {
+            "day": "monday"
+          }
+        }
+      ],
+      "latency_ms": 1104.2,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "2 pm.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "Great. Can I get your full name, please?",
+      "tool_calls": [],
+      "latency_ms": 1104.4,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "This is Marcus Bell.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "You're all set, Marcus. We'll see you Monday at 2 PM. Is there anything else?",
+      "tool_calls": [
+        {
+          "name": "book_appointment",
+          "args": {
+            "name": "Marcus Bell",
+            "day": "monday",
+            "time": "14:00",
+            "reason": "filling"
+          }
+        }
+      ],
+      "latency_ms": 1106.7,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "No, actually, can we do Friday instead?",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "Thanks for calling Maple Street Dental. Have a great day!",
+      "tool_calls": [],
+      "latency_ms": 1106.2,
+      "start": null,
+      "end": null
+    }
+  ],
+  "ended_by": "agent",
+  "error": null
+}

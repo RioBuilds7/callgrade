@@ -1,0 +1,29 @@
+# Simple questions. Mostly about sounding right when spoken aloud.
+- id: office-hours
+  title: Caller asks for opening hours
+  tags: [faq, smoke]
+  caller:
+    - "What are your hours?"
+    - "Thanks, bye."
+  expect:
+    - said_any: ["8 AM to 5 PM"]
+    - speakable: {}
+    - max_words_per_turn: 30
+    - ended_by: agent
+  judge:
+    rubric:
+      - id: answer
+        question: >-
+          This reply is read aloud by a text-to-speech voice. Did the agent give the opening hours in plain
+          spoken sentences? Markdown symbols (asterisks, dashes as bullets), line-by-line lists or a web
+          address score 1, because the voice reads them out literally.
+
+- id: insurance
+  title: Caller asks which insurance is accepted
+  tags: [faq]
+  caller:
+    - "Do you take Delta Dental insurance?"
+  expect:
+    - said_any: ["delta dental"]
+    - speakable: {}
+    - max_words_per_turn: 30

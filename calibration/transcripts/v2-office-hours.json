@@ -1,0 +1,39 @@
+{
+  "scenario_id": "office-hours",
+  "turns": [
+    {
+      "speaker": "caller",
+      "text": "What are your hours?",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "Here are our hours:\n- **Monday to Friday:** 8 AM to 5 PM\n- **Saturday:** 9 AM to 1 PM\n- **Sunday:** closed\nYou can also see them at https://example.com/hours.",
+      "tool_calls": [],
+      "latency_ms": 1105.8,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Thanks, bye.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "Thanks for calling Maple Street Dental. Goodbye!",
+      "tool_calls": [],
+      "latency_ms": 1103.9,
+      "start": null,
+      "end": null
+    }
+  ],
+  "ended_by": "agent",
+  "error": null
+}

@@ -1,0 +1,111 @@
+{
+  "scenario_id": "book-closed-day",
+  "turns": [
+    {
+      "speaker": "caller",
+      "text": "Can I come in Wednesday for a checkup?",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "We don't have openings on Wednesday. The next day with openings is Thursday. Would that work?",
+      "tool_calls": [
+        {
+          "name": "check_availability",
+          "args": {
+            "day": "wednesday"
+          }
+        }
+      ],
+      "latency_ms": 6.2,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Yes, Thursday is fine.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "On Thursday I have 9 AM or 11 AM. Which would you prefer?",
+      "tool_calls": [
+        {
+          "name": "check_availability",
+          "args": {
+            "day": "thursday"
+          }
+        }
+      ],
+      "latency_ms": 3.5,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "11 works.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "Great. Can I get your full name, please?",
+      "tool_calls": [],
+      "latency_ms": 3.5,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "My name is Priya Raman.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "To confirm: a checkup on Thursday at 11 AM for Priya Raman. Is that right?",
+      "tool_calls": [],
+      "latency_ms": 3.4,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Yep.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "You're all set, Priya. We'll see you Thursday at 11 AM. Is there anything else?",
+      "tool_calls": [
+        {
+          "name": "book_appointment",
+          "args": {
+            "name": "Priya Raman",
+            "day": "thursday",
+            "time": "11:00",
+            "reason": "checkup"
+          }
+        }
+      ],
+      "latency_ms": 3.3,
+      "start": null,
+      "end": null
+    }
+  ],
+  "ended_by": "caller",
+  "error": null
+}

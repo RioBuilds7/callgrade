@@ -1,0 +1,120 @@
+{
+  "scenario_id": "book-cleaning",
+  "turns": [
+    {
+      "speaker": "caller",
+      "text": "Hi, I'd like to book a cleaning.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "What day works best for you?",
+      "tool_calls": [],
+      "latency_ms": 29.0,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Next Tuesday works.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "On Tuesday I have 10:30 AM or 3 PM. Which would you prefer?",
+      "tool_calls": [
+        {
+          "name": "check_availability",
+          "args": {
+            "day": "tuesday"
+          }
+        }
+      ],
+      "latency_ms": 3.4,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Morning if possible.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "Great. Can I get your full name, please?",
+      "tool_calls": [],
+      "latency_ms": 3.5,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "It's Dana Whitfield.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "To confirm: a cleaning on Tuesday at 10:30 AM for Dana Whitfield. Is that right?",
+      "tool_calls": [],
+      "latency_ms": 3.3,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Yes, that's right.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "You're all set, Dana. We'll see you Tuesday at 10:30 AM. Is there anything else?",
+      "tool_calls": [
+        {
+          "name": "book_appointment",
+          "args": {
+            "name": "Dana Whitfield",
+            "day": "tuesday",
+            "time": "10:30",
+            "reason": "cleaning"
+          }
+        }
+      ],
+      "latency_ms": 4.1,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "No, that's all. Thanks!",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "Thanks for calling Maple Street Dental. Have a great day!",
+      "tool_calls": [],
+      "latency_ms": 2.7,
+      "start": null,
+      "end": null
+    }
+  ],
+  "ended_by": "agent",
+  "error": null
+}

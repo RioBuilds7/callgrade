@@ -1,0 +1,21 @@
+{
+  "id": "synthetic-reschedule-slow",
+  "title": "Caller moves an appointment; agent is slow and talks over them once",
+  "source": "synthetic: written for this repo to show the timing metrics, not a real call",
+  "goal": "Did the agent move the caller's appointment to the day and time they asked for?",
+  "segments": [
+    {"speaker": "caller", "start": 0.0, "end": 2.6, "text": "Hi, I need to reschedule my appointment."},
+    {"speaker": "agent", "start": 3.4, "end": 5.0, "text": "Sure. What day works best for you?"},
+    {"speaker": "caller", "start": 5.6, "end": 7.9, "text": "Friday, if you have anything."},
+    {"speaker": "agent", "start": 11.2, "end": 14.0, "text": "On Friday I have 8:30 AM or 1 PM. Which would you prefer?"},
+    {"speaker": "caller", "start": 14.5, "end": 15.2, "text": "One PM."},
+    {"speaker": "caller", "start": 15.4, "end": 16.6, "text": "Actually, wait, um"},
+    {"speaker": "agent", "start": 16.1, "end": 18.0, "text": "Great. Can I get your full name, please?"},
+    {"speaker": "caller", "start": 18.4, "end": 20.3, "text": "Sorry. It's Sam Iverson. One PM is fine."},
+    {"speaker": "agent", "start": 21.0, "end": 24.9, "text": "To confirm: moving your appointment to Friday at 1 PM for Sam Iverson. Is that right?"},
+    {"speaker": "caller", "start": 25.3, "end": 25.8, "text": "Yes."},
+    {"speaker": "agent", "start": 26.4, "end": 29.5, "text": "You're all set, Sam. We'll see you Friday at 1 PM. Is there anything else?"},
+    {"speaker": "caller", "start": 29.9, "end": 31.0, "text": "No, that's all, bye."},
+    {"speaker": "agent", "start": 31.5, "end": 33.4, "text": "Thanks for calling. Have a great day!"}
+  ]
+}

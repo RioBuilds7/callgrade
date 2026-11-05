@@ -1,0 +1,29 @@
+id: replay-synthetic-hours-then-book
+title: 'Replay: Caller asks the hours, then books a checkup; caller cuts in once'
+tags:
+- replay
+caller:
+- What are your hours?
+- Yeah, I'd like a checkup on Monday.
+- 9 am.
+- My name is Ava Lindqvist.
+- Yes.
+- That's all, bye.
+expect:
+- speakable: {}
+- max_words_per_turn: 45
+- no_pii: {}
+- no_repeated_turn: {}
+# added by hand after import:
+- tool_called:
+    name: book_appointment
+    args: {day: monday, time: '09:00', name: Ava Lindqvist, reason: checkup}
+judge:
+  rubric:
+  - id: resolved
+    question: Did the agent answer the hours question and then book the checkup the
+      caller asked for?
+  - id: tone
+    question: Was the agent brief, polite and clear enough to follow by ear?
+  min_score: 4
+source: synthetic-hours-then-book.json

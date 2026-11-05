@@ -1,0 +1,29 @@
+id: replay-synthetic-reschedule-slow
+title: 'Replay: Caller moves an appointment; agent is slow and talks over them once'
+tags:
+- replay
+caller:
+- Hi, I need to reschedule my appointment.
+- Friday, if you have anything.
+- One PM. Actually, wait, um
+- Sorry. It's Sam Iverson. One PM is fine.
+- Yes.
+- No, that's all, bye.
+expect:
+- speakable: {}
+- max_words_per_turn: 45
+- no_pii: {}
+- no_repeated_turn: {}
+# added by hand after import:
+- tool_called:
+    name: reschedule_appointment
+    args: {day: friday, time: '13:00', name: Sam Iverson}
+judge:
+  rubric:
+  - id: resolved
+    question: Did the agent move the caller's appointment to the day and time they
+      asked for?
+  - id: tone
+    question: Was the agent brief, polite and clear enough to follow by ear?
+  min_score: 4
+source: synthetic-reschedule-slow.json

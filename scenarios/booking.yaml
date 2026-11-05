@@ -1,0 +1,92 @@
+# Booking flows. Every caller line is sent after the agent's previous reply.
+- id: book-cleaning
+  title: New caller books a cleaning and confirms
+  tags: [booking, smoke]
+  caller:
+    - "Hi, I'd like to book a cleaning."
+    - "Next Tuesday works."
+    - "Morning if possible."
+    - "It's Dana Whitfield."
+    - "Yes, that's right."
+    - "No, that's all. Thanks!"
+  expect:
+    - tool_called: {name: book_appointment, args: {day: tuesday, time: "10:30", name: Dana Whitfield, reason: cleaning}}
+    - said_before_tool: {tool: book_appointment, pattern: "to confirm|is that right"}
+    - speakable: {}
+    - max_words_per_turn: 40
+    - latency: {p95_ms: 800}
+    - ended_by: agent
+  judge:
+    rubric:
+      # Turn order (read-back before booking) is a deterministic check above:
+      # calibration showed the small judge model can't reliably judge order.
+      - id: task
+        question: Did the agent book a cleaning on Tuesday morning for Dana Whitfield, as the caller asked?
+
+- id: book-closed-day
+  title: Caller asks for a day with no openings and accepts the next one
+  tags: [booking]
+  caller:
+    - "Can I come in Wednesday for a checkup?"
+    - "Yes, Thursday is fine."
+    - "11 works."
+    - "My name is Priya Raman."
+    - "Yep."
+  expect:
+    - tool_called: {name: check_availability, args: {day: wednesday}}
+    - tool_called: {name: book_appointment, args: {day: thursday, time: "11:00", reason: checkup}}
+    - said_any: ["don't have openings on wednesday"]
+    - speakable: {}
+    - latency: {p95_ms: 800}
+  judge:
+    rubric:
+      - id: task
+        question: When Wednesday had no openings, did the agent say so plainly, offer another day, and book what the caller accepted?
+
+- id: change-at-confirmation
+  title: Caller changes the day when the agent reads the booking back
+  tags: [booking]
+  caller:
+    - "I need to schedule a filling."
+    - "Monday, please."
+    - "2 pm."
+    - "This is Marcus Bell."
+    - "No, actually, can we do Friday instead?"
+    - "Friday."
+    - "1 pm."
+    - "Yes."
+  expect:
+    - tool_called: {name: book_appointment, args: {day: friday, time: "13:00", name: Marcus Bell}}
+    - tool_not_called: {name: cancel_appointment}
+    - said_before_tool: {tool: book_appointment, pattern: "to confirm"}
+    - speakable: {}
+  judge:
+    rubric:
+      - id: task
+        question: Did the agent drop the Monday slot when the caller objected and book Friday at 1 PM instead?
+
+- id: reschedule
+  title: Existing patient moves an appointment
+  tags: [booking]
+  caller:
+    - "Hi, I need to reschedule my appointment."
+    - "Saturday."
+    - "Yes, that works."
+    - "It's Lena Ortiz."
+    - "Correct."
+  expect:
+    - tool_called: {name: reschedule_appointment, args: {day: saturday, time: "10:00", name: Lena Ortiz}}
+    - tool_not_called: {name: book_appointment}
+    - speakable: {}
+
+- id: cancel
+  title: Caller cancels
+  tags: [booking, smoke]
+  caller:
+    - "I have to cancel my appointment."
+    - "My name is Tom Okafor."
+    - "That's all, bye."
+  expect:
+    - tool_called: {name: cancel_appointment, args: {name: Tom Okafor}}
+    - ended_by: agent
+    - max_agent_turns: 3

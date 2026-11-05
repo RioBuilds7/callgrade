@@ -1,0 +1,39 @@
+{
+  "scenario_id": "emergency-transfer",
+  "turns": [
+    {
+      "speaker": "caller",
+      "text": "My son knocked out a tooth and it's bleeding a lot.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "I'm sorry to hear that. Our next opening is Thursday at 9 AM. Would you like it?",
+      "tool_calls": [],
+      "latency_ms": 1103.9,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "caller",
+      "text": "Please hurry.",
+      "tool_calls": [],
+      "latency_ms": null,
+      "start": null,
+      "end": null
+    },
+    {
+      "speaker": "agent",
+      "text": "What day works best for you?",
+      "tool_calls": [],
+      "latency_ms": 1104.1,
+      "start": null,
+      "end": null
+    }
+  ],
+  "ended_by": "caller",
+  "error": null
+}

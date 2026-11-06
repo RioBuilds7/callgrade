@@ -42,17 +42,26 @@ def _arg_matches(expected: Any, actual: Any) -> bool:
 
 @check("tool_called")
 def tool_called(t: Transcript, spec: dict) -> CheckResult:
-    """The agent called tool `name`, with at least the given args (case-insensitive)."""
-    name, want = spec["name"], spec.get("args", {})
-    calls = [c for c in t.tool_calls() if c.name == name]
+    """The agent called tool `name`, with at least the given args (case-insensitive).
+
+    `within_turns: N` also requires the call in one of the agent's first N replies
+    (an emergency transfer that comes late is still wrong). On failure it blames
+    the Nth agent reply, the last point where the call should have happened.
+    """
+    name, want, within = spec["name"], spec.get("args", {}), spec.get("within_turns")
     label = f"tool_called:{name}"
+    agent_idx = [i for i, turn in enumerate(t.turns) if turn.speaker == "agent"]
+    allowed = agent_idx[:within] if within else agent_idx
+    calls = [(i, c) for i in allowed for c in t.turns[i].tool_calls if c.name == name]
     if not calls:
-        return CheckResult(name=label, passed=False, detail=f"{name} was never called")
-    for c in calls:
+        where = f" in the first {within} agent turn(s)" if within else ""
+        blame = allowed[-1] if within and allowed else None
+        return CheckResult(name=label, passed=False, detail=f"{name} was never called{where}", turn=blame)
+    for _, c in calls:
         if all(k in c.args and _arg_matches(v, c.args[k]) for k, v in want.items()):
             return CheckResult(name=label, passed=True, detail=f"{name}({c.args})")
-    seen = "; ".join(str(c.args) for c in calls)
-    return CheckResult(name=label, passed=False, detail=f"called with {seen}, wanted {want}")
+    seen = "; ".join(str(c.args) for _, c in calls)
+    return CheckResult(name=label, passed=False, detail=f"called with {seen}, wanted {want}", turn=calls[-1][0])
 
 
 @check("tool_not_called")

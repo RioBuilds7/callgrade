@@ -46,7 +46,8 @@ the gate and v2 is stopped. No API keys are needed, because the judge uses the s
 With Docker instead of uv:
 
 ```bash
-mkdir -p runs && docker compose up --build --abort-on-container-exit --exit-code-from bench
+mkdir -p runs
+HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up --build --abort-on-container-exit --exit-code-from bench
 ```
 
 Run the tests with `uv run pytest`.
@@ -127,7 +128,7 @@ callgrade run --agent examples/llm-receptionist.yaml
 
 | Check | Fails when |
 |---|---|
-| `tool_called` / `tool_not_called` | a tool (with these args, case-insensitive) was / wasn't called |
+| `tool_called` / `tool_not_called` | a tool (with these args, case-insensitive) wasn't / was called; `within_turns: N` also requires it in the agent's first N replies |
 | `said_before_tool` | the tool was called before any agent turn matching a pattern (e.g. read-back) |
 | `said_any` / `never_said` | no agent turn matches / some agent turn matches a regex |
 | `speakable` | markdown, lists, URLs, emoji or template placeholders would be read aloud |

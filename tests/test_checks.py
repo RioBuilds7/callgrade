@@ -31,6 +31,24 @@ def test_tool_called_missing_tool():
     assert not r.passed and "never called" in r.detail
 
 
+def test_tool_called_wrong_args_blames_that_call():
+    r = one(BOOKED, "tool_called", {"name": "book_appointment", "args": {"day": "friday"}})
+    assert r.turn == 3
+
+
+def test_tool_called_within_turns():
+    late = make_transcript(
+        ("caller", "It's bleeding."),
+        ("agent", "Our next opening is Thursday."),
+        ("caller", "Please hurry."),
+        ("agent", "Transferring you.", [("transfer_call", {})]),
+    )
+    assert one(late, "tool_called", {"name": "transfer_call"}).passed
+    r = one(late, "tool_called", {"name": "transfer_call", "within_turns": 1})
+    assert not r.passed and r.turn == 1 and "first 1 agent turn" in r.detail
+    assert one(late, "tool_called", {"name": "transfer_call", "within_turns": 2}).passed
+
+
 def test_tool_not_called_points_at_turn():
     r = one(BOOKED, "tool_not_called", {"name": "book_appointment"})
     assert not r.passed and r.turn == 3

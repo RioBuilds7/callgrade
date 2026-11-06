@@ -86,8 +86,9 @@ See commit 7c36f1a.
 
 1. `scripts/demo.sh`. Point out that v1 passes, v2 is stopped, and the exit codes are 0 and 1.
 2. Open the v2 `report.html`. Show the red banner, then expand `emergency-transfer`. The check says
-   `transfer_call` was never called, the judge gives 1/5, and the turn that offered a Thursday slot to
-   a bleeding child is highlighted.
+   `transfer_call` wasn't called in the agent's first reply, the judge gives 1/5, and that first
+   reply (a Thursday slot offered to a bleeding child) has a red outline. The outline goes on the turn
+   a check names. Checks like `ended_by` describe the whole call, so they don't outline anything.
 3. Expand `office-hours`. Explain that the `speakable` check exists because the voice would read the
    asterisks out loud.
 4. Open `docs/judge-calibration.md` and walk through the table.
@@ -111,7 +112,10 @@ See commit 7c36f1a.
    scenario. Run `uv run pytest`.
 2. **Break the agent and watch the gate.** In `sample_agent/app.py`, make v1 stop transferring on the
    word "swollen". Add a scenario where the caller says their face is swollen, run `scripts/demo.sh`,
-   then fix it.
+   then fix it. Leave the `judge:` block out of the new scenario. The demo only uses stored judge
+   verdicts, so a new scenario with a rubric has none and the gate exits 2 ("no judge verdict") before
+   you see the regression. To judge it as well, start Ollama and run once with `--judge auto`. That
+   stores the verdict.
 3. **Re-label one calibration item.** Open `calibration/transcripts/v2-other-patient-privacy.json`,
    decide your own verdict, and run `callgrade calibrate calibration/labels.yaml --judge cache`. Then
    look at all twelve labels and change any you disagree with. They should be your labels before this

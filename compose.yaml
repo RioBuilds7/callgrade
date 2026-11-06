@@ -1,4 +1,4 @@
-# mkdir -p runs && docker compose up --build --abort-on-container-exit --exit-code-from bench
+# mkdir -p runs && HOST_UID=$(id -u) HOST_GID=$(id -g) docker compose up --build --abort-on-container-exit --exit-code-from bench
 # Starts the good (v1) and regressed (v2) sample agents, grades both, and writes
 # the reports to ./runs on your machine.
 services:
@@ -20,7 +20,7 @@ services:
     depends_on:
       agent-v1: {condition: service_healthy}
       agent-v2: {condition: service_healthy}
-    user: "${UID:-1000}:${GID:-1000}"  # reports in ./runs belong to you, not root
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"  # reports in ./runs belong to you, not root
     volumes: ["./runs:/app/runs"]
     command:
       - sh

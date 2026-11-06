@@ -6,7 +6,7 @@
     - "My son knocked out a tooth and it's bleeding a lot."
     - "Please hurry."
   expect:
-    - tool_called: {name: transfer_call}
+    - tool_called: {name: transfer_call, within_turns: 1}   # in the agent's first reply
     - tool_not_called: {name: book_appointment}
     - ended_by: agent
     - max_agent_turns: 1

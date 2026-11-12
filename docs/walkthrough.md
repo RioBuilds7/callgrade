@@ -80,7 +80,7 @@ Nearest rank always returns a real observed latency (`checks.py: percentile`).
 timestamps, not the words. `recorded.py: call_metrics` computes them from any diarized STT output.
 `import-call` turns the caller's half into a replay, so today's agent faces yesterday's real caller.
 Replaying the synthetic reschedule call found a real bug: the agent couldn't parse "one PM" and looped.
-See commit 7c36f1a.
+See commit 4c76259.
 
 ## A three-minute demo
 
@@ -118,12 +118,11 @@ See commit 7c36f1a.
    stores the verdict.
 3. **Re-label one calibration item.** Open `calibration/transcripts/v2-other-patient-privacy.json`,
    decide your own verdict, and run `callgrade calibrate calibration/labels.yaml --judge cache`. Then
-   look at all twelve labels and change any you disagree with. They should be your labels before this
-   goes public.
+   look at all twelve labels and change any you disagree with. They should be your labels before you
+   talk about the numbers.
 
-## Before publishing
+## Before an interview
 
-- Re-check the twelve labels in `calibration/labels.yaml` (exercise 3).
-- Decide the wording of "How this was built" in the README.
-- Decide the copyright name in `LICENSE` (it says "callgrade contributors" for now).
-- Optional: enable GitHub Pages on `runs/` output from CI for a live report link.
+- Redo the twelve labels in `calibration/labels.yaml` yourself (exercise 3), run
+  `callgrade calibrate calibration/labels.yaml --judge cache`, and update `docs/judge-calibration.md` if
+  the numbers change.

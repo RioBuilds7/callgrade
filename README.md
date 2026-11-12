@@ -176,7 +176,7 @@ The input is the diarized, timestamped transcript most speech-to-text services p
 `import-call` turns the caller's side into a replay scenario with standard voice checks. Add task checks
 by hand. Replaying `calls/synthetic-reschedule-slow.json` found a real bug in the sample agent: it
 couldn't understand a time spoken as words ("one PM") and asked the same question four times. That's
-fixed in commit 7c36f1a and guarded by `no_repeated_turn`.
+fixed in commit 4c76259 and guarded by `no_repeated_turn`.
 
 The two calls in `calls/` are synthetic, written for this repo. No real calls or customer data are
 included.
